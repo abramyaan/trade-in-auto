@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PhoneCall, Search, CircleDollarSign, FileText, Car, ChevronsDown, Star } from "lucide-react";
-import { useState } from "react";
-const [phone, setPhone] = useState("");
+import { useState } from "react"; // 1. Импорты остаются чистыми
+
 import fon from "@/assets/fon.jpg";
 import hyundaiCreta from "@/assets/HyundaiCreta.jpg";
 import sprinterClassic from "@/assets/Mercedes-BenzSprinterClassic.jpg";
@@ -138,6 +138,7 @@ function Logo() {
 }
 
 function Index() {
+  const [phone, setPhone] = useState(""); 
   const [activeTab, setActiveTab] = useState<"all" | "excellent" | "budget" | "commercial">("all");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
