@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PhoneCall, Search, CircleDollarSign, FileText, Car, ChevronsDown, Star } from "lucide-react";
-import { useState } from "react"; // 1. Импорты остаются чистыми
+import { useState } from "react"; 
 
 import fon from "@/assets/fon.jpg";
 import hyundaiCreta from "@/assets/HyundaiCreta.jpg";
@@ -20,9 +20,8 @@ import polo from "@/assets/polo.jpg";
 import audi from "@/assets/AudiA6.jpg";
 import fordFocus from "@/assets/geely.jpg";
 
-export const Route = createFileRoute("/")({
-  component: Index,
-});
+// 2. ОБЪЯВЛЕНИЕ РОУТА
+
 
 const cars = [
   { 
@@ -122,6 +121,10 @@ const cars = [
     price: "1 575 000 ₽" 
   },
 ];
+
+export const Route = createFileRoute("/")({
+  component: Index,
+});
 
 // КОМПОНЕНТ ЛОГОТИПА
 function Logo() {
