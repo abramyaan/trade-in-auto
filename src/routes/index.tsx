@@ -5,6 +5,12 @@ import { PhoneCall, Search, CircleDollarSign, FileText, Car, ChevronsDown, Star 
 import { useState } from "react"; 
 
 import fon from "@/assets/fon.jpg";
+import otziv1 from "@/assets/otziv1.jpg";
+import otziv2 from "@/assets/otziv2.jpg";
+import otziv3 from "@/assets/otziv3.jpg";
+import otziv4 from "@/assets/otziv4.jpg";
+import otziv5 from "@/assets/otziv5.jpg";
+import max from "@/assets/max.png";
 import hyundaiCreta from "@/assets/HyundaiCreta.jpg";
 import sprinterClassic from "@/assets/Mercedes-BenzSprinterClassic.jpg";
 import peugeot308 from "@/assets/Peugeot308.jpg";
@@ -42,14 +48,14 @@ const cars = [
     img: vwTiguan, 
     title: "Volkswagen Tiguan", 
     year: 2020, 
-    specs: "1.4 TSI AT, 4WD, 95 т.км, исправен, на ходу, присутствуют окрасы, следы кузовного ремонта", 
+    specs: "1.4 TSI AT, 4WD, 95 т.км, на ходу, окрасы, следы кузовного ремонта", 
     price: "2 150 000 ₽" 
   },
   { 
     img: toyotaCrown, 
     title: "Toyota Crown", 
     year: 2018, 
-    specs: "2.5 AT гибрид, задний привод, 140 т.км, правый руль, премиум седан, на ходу, требуется косметический ремонт", 
+    specs: "2.5 AT гибрид, 4WD, 140 т.км, правый руль, на ходу, косметический ремонт", 
     price: "2 600 000 ₽" 
   },
   { 
@@ -61,10 +67,10 @@ const cars = [
   },
   { 
     img: fordFocus, 
-    title: "Ford Focus", 
-    year: 2013, 
-    specs: "1.6 AMT, 155 т.км, два владельца, без ДТП, не на ходу, неисправность коробки передач", 
-    price: "650 000 ₽" 
+    title: "Geely Coolray", 
+    year: 2022, 
+    specs: "1.5 AMT, 43 т.км, один владелец, отличное состояние, без ДТП", 
+    price: "1 575 000 ₽" 
   },
   { 
     img: vwPassat, 
@@ -110,15 +116,15 @@ const cars = [
   },{ 
     img: audi, 
     title: "Audi A6", 
-    year: 2017, 
-    specs: "2.0 TDI AT, 150 т.км, собственник юридическое лицо, хорошее состояние, грузопассажирский цельнометаллический фургон", 
-    price: "1 800 000 ₽" 
+    year: 2013, 
+    specs: "2.0 CVT, 145 т.км, требуется ремонт КПП, на ходу, повреждения по кузову", 
+    price: "1 100 000 ₽" 
   },{ 
     img: geely, 
-    title: "Geely Coolray", 
-    year: 2022, 
-    specs: "1,5 AMT, пробег 43 т.км. Один владелец, отличное состояние. Без ДТП", 
-    price: "1 575 000 ₽" 
+    title: "Ford Focus", 
+    year: 2013, 
+    specs: "1.6 AMT, 155 т.км, два владельца, без ДТП, не на ходу, неисправность КПП", 
+    price: "650 000 ₽" 
   },
 ];
 
@@ -170,13 +176,38 @@ function Index() {
             <a href="#callback" className="hover:text-primary transition-colors">Контакты</a>
           </div>
           
-          {/* ТЕЛЕФОН БЕЗ ИКОНКИ */}
-          <a 
-            href="tel:+73433282530" 
-            className="text-sm font-bold text-foreground hover:text-primary transition-colors md:text-base whitespace-nowrap"
-          >
-            <span>+7 (343) 328-25-30</span>
-          </a>
+          {/* ИКОНКИ НА МОБИЛКЕ | НОМЕР + ИКОНКИ НА ПК */}
+          <div className="flex items-center gap-3">
+            {/* Телефон — только на десктопе */}
+            <a 
+              href="tel:+79221882530" 
+              className="hidden md:block text-sm font-bold text-foreground hover:text-primary transition-colors whitespace-nowrap"
+            >
+              +7 (922) 188-25-30
+            </a>
+            {/* Telegram */}
+            <a
+              href="https://t.me/+79221882530"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Telegram"
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#2AABEE]/10 hover:bg-[#2AABEE]/20 text-[#2AABEE] transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+              </svg>
+            </a>
+            {/* Мессенджер Макс */}
+            <a
+              href="https://max.app/call/+79221882530"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Макс"
+              className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#6B4EFF]/10 hover:bg-[#6B4EFF]/20 text-[#6B4EFF] transition-colors"
+            >
+              <img src={max} alt="Макс" className="h-5 w-5 object-contain" />
+            </a>
+          </div>
         </div>
       </nav>
 
@@ -190,7 +221,7 @@ function Index() {
         <div className="relative z-10 mx-auto max-w-5xl px-4 md:px-8 text-center space-y-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary border border-primary/20 animate-fade-in">
             <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-            Выкуп авто за 25 минут в Екатеринбурге
+            Выкуп авто в В Екатеринбурге и Свердловской области
           </span>
           <h1 className="font-heading text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
             Выкупим ваш автомобиль <br />
@@ -352,59 +383,28 @@ function Index() {
         </div>
       </section>
 
-      {/* НОВЫЙ БЛОК: ОТЗЫВЫ */}
+      {/* ФОТО */}
       <section id="reviews" className="border-t border-border bg-background py-12 md:py-20">
         <div className="mx-auto max-w-7xl px-4 md:px-8 space-y-8 md:space-y-12">
           <div className="text-center space-y-3 md:space-y-4">
-            <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary border border-primary/20">
-              Отзывы клиентов
-            </span>
-            <h2 className="font-heading text-2xl md:text-4xl font-bold tracking-tight">Что говорят о нас владельцы</h2>
+            
+            <h2 className="font-heading text-2xl md:text-4xl font-bold tracking-tight">Отзывы</h2>
             <p className="mx-auto max-w-2xl text-sm md:text-base text-muted-foreground">
-              Мы дорожим своей репутацией и стараемся сделать процесс выкупа максимально комфортным.
+              Реальные отзывы выкупленных автомобилей.
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="bg-card border border-border p-6 rounded-xl space-y-4">
-              <div className="flex items-center gap-1 text-amber-500">
-                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
-              </div>
-              <p className="text-sm text-muted-foreground italic">
-                "Продавал здесь свой Солярис после небольшого ДТП. Оценщик приехал через полчаса, сумму назвали адекватную, не пытались сбить цену за каждую царапину. Деньги перевели на карту сразу после подписания договора."
-              </p>
-              <div>
-                <h4 className="font-semibold text-sm">Михаил Р.</h4>
-                <p className="text-xs text-muted-foreground">Выкуп Hyundai Solaris</p>
-              </div>
-            </div>
-
-            <div className="bg-card border border-border p-6 rounded-xl space-y-4">
-              <div className="flex items-center gap-1 text-amber-500">
-                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
-              </div>
-              <p className="text-sm text-muted-foreground italic">
-                "Машина была в залоге у банка, думала возникнут проблемы со срочной продажей. Ребята из ТрейдИнАвто сами закрыли остаток долга в банке, а разницу выплатили мне наличными. Всё заняло не больше часа!"
-              </p>
-              <div>
-                <h4 className="font-semibold text-sm">Алена К.</h4>
-                <p className="text-xs text-muted-foreground">Выкуп KIA Rio (залог)</p>
-              </div>
-            </div>
-
-            <div className="bg-card border border-border p-6 rounded-xl space-y-4">
-              <div className="flex items-center gap-1 text-amber-500">
-                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
-              </div>
-              <p className="text-sm text-muted-foreground italic">
-                "Сдавал старенький коммерческий фургон. Состояние было среднее, но цену предложили отличную, даже выше чем я рассчитывал на досках объявлений. Документы оформили официально, рекомендую."
-              </p>
-              <div>
-                <h4 className="font-semibold text-sm">Дмитрий В.</h4>
-                <p className="text-xs text-muted-foreground">Выкуп ГАЗель Бизнес</p>
-              </div>
-            </div>
-          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {[otziv1, otziv2, otziv3, otziv4, otziv5].map((src, i) => (
+    <div
+      key={i}
+      className="rounded-xl overflow-hidden border border-border cursor-zoom-in"
+      onClick={() => setSelectedImage(src)}
+    >
+      <img src={src} alt={`Отзыв ${i + 1}`} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300" />
+    </div>
+  ))}
+</div>
         </div>
       </section>
 
@@ -416,7 +416,7 @@ function Index() {
             <p className="text-muted-foreground">Мы занимаемся профессиональным выкупом автомобилей в Свердловской области более 10 лет. Наша главная задача — сделать сделку максимально быстрой, безопасной и выгодной для вас.</p>
             <div className="grid gap-4 sm:grid-cols-2 pt-2">
               <div className="space-y-1">
-                <h4 className="font-semibold text-primary">До 83% стоимости</h4>
+                <h4 className="font-semibold text-primary">До 99% стоимости</h4>
                 <p className="text-sm text-muted-foreground">Выплачиваем реальные деньги, приближенные к рынку.</p>
               </div>
               <div className="space-y-1">
@@ -510,8 +510,8 @@ function Index() {
           </div>
           <div className="text-sm space-y-2">
             <p className="font-semibold mb-2">Контакты</p>
-            <a href="tel:+73432000000" className="block text-muted-foreground hover:text-primary">+7 (343) 200-00-00</a>
-            <a href="mailto:info@tradeinauto.ru" className="block text-muted-foreground hover:text-primary">info@tradeinauto.ru</a>
+            <a href="tel:+79221882530" className="block text-muted-foreground hover:text-primary">+7 (922) 188-25-30</a>
+            <a href="mailto:auto.a11iance@yandex.ru" className="block text-muted-foreground hover:text-primary">auto.a11iance@yandex.ru</a>
             <p className="text-muted-foreground">Екатеринбург, ул. Малышева, 51</p>
           </div>
           <div className="text-sm space-y-2">
@@ -548,7 +548,7 @@ function Index() {
 
       {/* ПЛАВАЮЩАЯ КНОПКА ЗВОНКА (СНИЗУ СПРАВА ПРИ СКРОЛЛЕ) */}
       <a
-        href="tel:+73433282530"
+        href="tel:+79221882530"
         className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 bg-blue-600 hover:bg-blue-700 animate-pulse"
         title="Позвонить нам"
       >
