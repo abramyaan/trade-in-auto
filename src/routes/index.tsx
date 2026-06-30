@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PhoneCall, Search, CircleDollarSign, FileText, Car, ChevronsDown, Star } from "lucide-react";
 import { useState } from "react"; 
-
+import emailjs from "@emailjs/browser"; // 1. Импортируем EmailJS
 import fon from "@/assets/fon.jpg";
 import otziv1 from "@/assets/otziv1.jpg";
 import otziv2 from "@/assets/otziv2.jpg";
@@ -148,6 +148,9 @@ function Logo() {
 
 function Index() {
   const [phone, setPhone] = useState(""); 
+  const [carModel, setCarModel] = useState(""); // Состояние для марки и модели
+  const [carYear, setCarYear] = useState("");   // Состояние для года выпуска
+  const [isSending, setIsSending] = useState(false); // Состояние отправки
   const [activeTab, setActiveTab] = useState<"all" | "excellent" | "budget" | "commercial">("all");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -161,6 +164,49 @@ function Index() {
     
     return true;
   });
+
+  // Функция отправки через EmailJS
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    // Дополнительная проверка перед отправкой (ровно 11 цифр)
+    if (phone.replace(/\D/g, "").length !== 11) {
+      alert("Номер телефона должен состоять ровно из 11 цифр!");
+      return;
+    }
+
+    setIsSending(true);
+
+    const templateParams = {
+      car_model: carModel,
+      car_year: carYear,
+      phone: phone,
+    };
+
+    emailjs
+      .send(
+        "service_1f0rik7",     // Service ID
+        "template_0xsn60e",    // Template ID
+        templateParams,
+        "7krMmgLWMid3DqKU1"    // Public Key
+      )
+      .then(
+        (response) => {
+          console.log("Успешно отправлено!", response.status, response.text);
+          alert("Заявка успешно отправлена! Мы свяжемся с вами в течение 5 минут.");
+          setCarModel("");
+          setCarYear("");
+          setPhone("");
+        },
+        (err) => {
+          console.error("Ошибка при отправке:", err);
+          alert("Произошла ошибка при отправке заявки. Пожалуйста, попробуйте еще раз.");
+        }
+      )
+      .finally(() => {
+        setIsSending(false);
+      });
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground relative">
@@ -395,16 +441,16 @@ function Index() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-  {[otziv1, otziv2, otziv3, otziv4, otziv5].map((src, i) => (
-    <div
-      key={i}
-      className="rounded-xl overflow-hidden border border-border cursor-zoom-in"
-      onClick={() => setSelectedImage(src)}
-    >
-      <img src={src} alt={`Отзыв ${i + 1}`} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300" />
-    </div>
-  ))}
-</div>
+            {[otziv1, otziv2, otziv3, otziv4, otziv5].map((src, i) => (
+              <div
+                key={i}
+                className="rounded-xl overflow-hidden border border-border cursor-zoom-in"
+                onClick={() => setSelectedImage(src)}
+              >
+                <img src={src} alt={`Отзыв ${i + 1}`} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300" />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -446,7 +492,6 @@ function Index() {
       </section>
 
       {/* Форма заявки */}
-      {/* Форма заявки */}
       <section id="callback" className="mx-auto max-w-3xl px-4 py-20 text-center space-y-8">
         <div className="space-y-3">
           <h2 className="font-heading text-3xl font-bold">Узнайте стоимость за 5 минут</h2>
@@ -454,24 +499,26 @@ function Index() {
         </div>
         <form 
           className="bg-card border border-border p-6 md:p-8 rounded-2xl shadow-sm space-y-4 text-left" 
-          onSubmit={(e) => {
-            e.preventDefault();
-            // Дополнительная проверка перед отправкой (ровно 11 цифр)
-            if (phone.replace(/\D/g, "").length !== 11) {
-              alert("Номер телефона должен состоять ровно из 11 цифр!");
-              return;
-            }
-            console.log("Форма отправлена", { phone });
-          }}
+          onSubmit={handleFormSubmit}
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <label className="text-sm font-medium">Марка и модель</label>
-              <Input placeholder="Например: Toyota Camry" required />
+              <Input 
+                placeholder="Например: Toyota Camry" 
+                required 
+                value={carModel}
+                onChange={(e) => setCarModel(e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Год выпуска</label>
-              <Input placeholder="Например: 2018" required />
+              <Input 
+                placeholder="Например: 2018" 
+                required 
+                value={carYear}
+                onChange={(e) => setCarYear(e.target.value)}
+              />
             </div>
           </div>
           
@@ -496,7 +543,9 @@ function Index() {
             </span>
           </div>
           
-          <Button type="submit" className="w-full h-12 text-base">Отправить заявку на оценку</Button>
+          <Button type="submit" className="w-full h-12 text-base" disabled={isSending}>
+            {isSending ? "Отправка..." : "Отправить заявку на оценку"}
+          </Button>
           <p className="text-[11px] text-center text-muted-foreground">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
         </form>
       </section>
