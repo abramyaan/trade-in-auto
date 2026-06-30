@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router"; // Добавили useNavigate
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PhoneCall, Search, CircleDollarSign, FileText, Car, ChevronsDown, Star } from "lucide-react";
-import { useState } from "react"; 
+import { PhoneCall, Search, CircleDollarSign, FileText, Car, ChevronsDown } from "lucide-react";
+import { useState } from "react";
 import emailjs from "@emailjs/browser"; // 1. Импортируем EmailJS
+
 import fon from "@/assets/fon.jpg";
 import otziv1 from "@/assets/otziv1.jpg";
 import otziv2 from "@/assets/otziv2.jpg";
@@ -26,105 +27,104 @@ import polo from "@/assets/polo.jpg";
 import audi from "@/assets/AudiA6.jpg";
 import fordFocus from "@/assets/geely.jpg";
 
-// 2. ОБЪЯВЛЕНИЕ РОУТА
-
-
 const cars = [
-  { 
-    img: toyotaCamry, 
-    title: "Toyota Camry", 
-    year: 2013, 
-    specs: "2.5 AT, 85 т.км, идеальное состояние, 1 владелец", 
-    price: "1 910 000 ₽" 
+  {
+    img: toyotaCamry,
+    title: "Toyota Camry",
+    year: 2013,
+    specs: "2.5 AT, 85 т.км, идеальное состояние, 1 владелец",
+    price: "1 910 000 ₽"
   },
-  { 
-    img: hyundaiCreta, 
-    title: "Hyundai Creta", 
-    year: 2020, 
-    specs: "2.0 AT, 4WD, 52 т.км, отличное состояние", 
-    price: "2 050 000 ₽" 
+  {
+    img: hyundaiCreta,
+    title: "Hyundai Creta",
+    year: 2020,
+    specs: "2.0 AT, 4WD, 52 т.км, отличное состояние",
+    price: "2 050 000 ₽"
   },
-  { 
-    img: vwTiguan, 
-    title: "Volkswagen Tiguan", 
-    year: 2020, 
-    specs: "1.4 TSI AT, 4WD, 95 т.км, на ходу, окрасы, следы кузовного ремонта", 
-    price: "2 150 000 ₽" 
+  {
+    img: vwTiguan,
+    title: "Volkswagen Tiguan",
+    year: 2020,
+    specs: "1.4 TSI AT, 4WD, 95 т.км, на ходу, окрасы, следы кузовного ремонта",
+    price: "2 150 000 ₽"
   },
-  { 
-    img: toyotaCrown, 
-    title: "Toyota Crown", 
-    year: 2018, 
-    specs: "2.5 AT гибрид, 4WD, 140 т.км, правый руль, на ходу, косметический ремонт", 
-    price: "2 600 000 ₽" 
+  {
+    img: toyotaCrown,
+    title: "Toyota Crown",
+    year: 2018,
+    specs: "2.5 AT гибрид, 4WD, 140 т.км, правый руль, на ходу, косметический ремонт",
+    price: "2 600 000 ₽"
   },
-  { 
-    img: toyotaPrado, 
-    title: "Toyota Land Cruiser Prado", 
-    year: 2007, 
-    specs: "4.0 AT, 4WD, 180 т.км, рамный внедорожник, без ДТП, второй владелец, отличное состояние", 
-    price: "2 250 000 ₽" 
+  {
+    img: toyotaPrado,
+    title: "Toyota Land Cruiser Prado",
+    year: 2007,
+    specs: "4.0 AT, 4WD, 180 т.км, рамный внедорожник, без ДТП, второй владелец, отличное состояние",
+    price: "2 250 000 ₽"
   },
-  { 
-    img: fordFocus, 
-    title: "Geely Coolray", 
-    year: 2022, 
-    specs: "1.5 AMT, 43 т.км, один владелец, отличное состояние, без ДТП", 
-    price: "1 575 000 ₽" 
+  {
+    img: fordFocus,
+    title: "Geely Coolray",
+    year: 2022,
+    specs: "1.5 AMT, 43 т.км, один владелец, отличное состояние, без ДТП",
+    price: "1 575 000 ₽"
   },
-  { 
-    img: vwPassat, 
-    title: "Volkswagen Passat", 
-    year: 2010, 
-    specs: "1.8 TSI DSG, 235 т.км, сделан капитальный ремонт двигателя, ухоженный салон, присутствуют сколы по кузову, следы небольшого ДТП", 
-    price: "680 000 ₽" 
+  {
+    img: vwPassat,
+    title: "Volkswagen Passat",
+    year: 2010,
+    specs: "1.8 TSI DSG, 235 т.км, сделан капитальный ремонт двигателя, ухоженный салон, присутствуют сколы по кузову, следы небольшого ДТП",
+    price: "680 000 ₽"
   },
-  { 
-    img: peugeot308, 
-    title: "Peugeot 308", 
-    year: 2012, 
-    specs: "1.6 AT, 130 т.км, хорошее техническое состояние, требуется косметический ремонт", 
-    price: "630 000 ₽" 
+  {
+    img: peugeot308,
+    title: "Peugeot 308",
+    year: 2012,
+    specs: "1.6 AT, 130 т.км, хорошее техническое состояние, требуется косметический ремонт",
+    price: "630 000 ₽"
   },
-  { 
-    img: renaultLogan, 
-    title: "Renault Logan", 
-    year: 2020, 
-    specs: "1.6 AT, 44 т.км, автомобиль в залоге у банка, отличное состояние", 
-    price: "1 250 000 ₽" 
+  {
+    img: renaultLogan,
+    title: "Renault Logan",
+    year: 2020,
+    specs: "1.6 AT, 44 т.км, автомобиль в залоге у банка, отличное состояние",
+    price: "1 250 000 ₽"
   },
-  { 
-    img: sprinterClassic, 
-    title: "Mercedes-Benz Sprinter Classic", 
-    year: 2017, 
-    specs: "2.2 дизель MT, 237 т.км, собственник юридическое лицо, хорошее состояние, грузопассажирский цельнометаллический фургон", 
-    price: "1 800 000 ₽" 
+  {
+    img: sprinterClassic,
+    title: "Mercedes-Benz Sprinter Classic",
+    year: 2017,
+    specs: "2.2 дизель MT, 237 т.км, собственник юридическое лицо, хорошее состояние, грузопассажирский цельнометаллический фургон",
+    price: "1 800 000 ₽"
   },
-  { 
-    img: toyotaCamry2, 
-    title: "Toyota Camry", 
-    year: 2008, 
-    specs: "2.4 AT, 178 т.км, после ДТП, не на ходу, максимальная комплектация", 
-    price: "600 000 ₽" 
+  {
+    img: toyotaCamry2,
+    title: "Toyota Camry",
+    year: 2008,
+    specs: "2.4 AT, 178 т.км, после ДТП, не на ходу, максимальная комплектация",
+    price: "600 000 ₽"
   },
-  { 
-    img: polo, 
-    title: "Volkswagen Polo", 
-    year: 2017, 
-    specs: "2.2 дизель MT, 237 т.км, собственник юридическое лицо, хорошее состояние, грузопассажирский цельнометаллический фургон", 
-    price: "1 800 000 ₽" 
-  },{ 
-    img: audi, 
-    title: "Audi A6", 
-    year: 2013, 
-    specs: "2.0 CVT, 145 т.км, требуется ремонт КПП, на ходу, повреждения по кузову", 
-    price: "1 100 000 ₽" 
-  },{ 
-    img: geely, 
-    title: "Ford Focus", 
-    year: 2013, 
-    specs: "1.6 AMT, 155 т.км, два владельца, без ДТП, не на ходу, неисправность КПП", 
-    price: "650 000 ₽" 
+  {
+    img: polo,
+    title: "Volkswagen Polo",
+    year: 2017,
+    specs: "2.2 дизель MT, 237 т.км, собственник юридическое лицо, хорошее состояние, грузопассажирский цельнометаллический фургон",
+    price: "1 800 000 ₽"
+  },
+  {
+    img: audi,
+    title: "Audi A6",
+    year: 2013,
+    specs: "2.0 CVT, 145 т.км, требуется ремонт КПП, на ходу, повреждения по кузову",
+    price: "1 100 000 ₽"
+  },
+  {
+    img: geely,
+    title: "Ford Focus",
+    year: 2013,
+    specs: "1.6 AMT, 155 т.км, два владельца, без ДТП, не на ходу, неисправность КПП",
+    price: "650 000 ₽"
   },
 ];
 
@@ -132,7 +132,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-// КОМПОНЕНТ ЛОГОТИПА
 function Logo() {
   return (
     <a href="#" className="flex items-center gap-2 group">
@@ -147,29 +146,29 @@ function Logo() {
 }
 
 function Index() {
-  const [phone, setPhone] = useState(""); 
-  const [carModel, setCarModel] = useState(""); // Состояние для марки и модели
-  const [carYear, setCarYear] = useState("");   // Состояние для года выпуска
-  const [isSending, setIsSending] = useState(false); // Состояние отправки
+  const navigate = useNavigate(); // Инициализация навигации
+  const [phone, setPhone] = useState("");
+  const [carModel, setCarModel] = useState(""); // Добавлено состояние модели
+  const [carYear, setCarYear] = useState("");   // Добавлено состояние года
+  const [isSending, setIsSending] = useState(false); // Состояние лоадера
   const [activeTab, setActiveTab] = useState<"all" | "excellent" | "budget" | "commercial">("all");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const filteredCars = cars.filter((car) => {
     if (activeTab === "all") return true;
     if (activeTab === "commercial") return car.title.toLowerCase().includes("sprinter");
-    
+
     const priceNum = parseInt(car.price.replace(/\s/g, ""), 10);
     if (activeTab === "budget") return priceNum < 1000000 && !car.title.toLowerCase().includes("sprinter");
     if (activeTab === "excellent") return car.year >= 2017 && !car.title.toLowerCase().includes("sprinter");
-    
+
     return true;
   });
 
-  // Функция отправки через EmailJS
+  // Функция отправки заявки через EmailJS
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Дополнительная проверка перед отправкой (ровно 11 цифр)
+
     if (phone.replace(/\D/g, "").length !== 11) {
       alert("Номер телефона должен состоять ровно из 11 цифр!");
       return;
@@ -193,10 +192,12 @@ function Index() {
       .then(
         (response) => {
           console.log("Успешно отправлено!", response.status, response.text);
-          alert("Заявка успешно отправлена! Мы свяжемся с вами в течение 5 минут.");
+          // Очищаем форму
           setCarModel("");
           setCarYear("");
           setPhone("");
+          // Перенаправляем на страницу спасибо
+          navigate({ to: "/thanks" });
         },
         (err) => {
           console.error("Ошибка при отправке:", err);
@@ -221,17 +222,14 @@ function Index() {
             <a href="#reviews" className="hover:text-primary transition-colors">Отзывы</a>
             <a href="#callback" className="hover:text-primary transition-colors">Контакты</a>
           </div>
-          
-          {/* ИКОНКИ НА МОБИЛКЕ | НОМЕР + ИКОНКИ НА ПК */}
+
           <div className="flex items-center gap-3">
-            {/* Телефон — только на десктопе */}
-            <a 
-              href="tel:+79221882530" 
+            <a
+              href="tel:+79221882530"
               className="hidden md:block text-sm font-bold text-foreground hover:text-primary transition-colors whitespace-nowrap"
             >
               +7 (922) 188-25-30
             </a>
-            {/* Telegram */}
             <a
               href="https://t.me/+79221882530"
               target="_blank"
@@ -240,10 +238,9 @@ function Index() {
               className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#2AABEE]/10 hover:bg-[#2AABEE]/20 text-[#2AABEE] transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
               </svg>
             </a>
-            {/* Мессенджер Макс */}
             <a
               href="https://max.app/call/+79221882530"
               target="_blank"
@@ -263,7 +260,7 @@ function Index() {
           <img src={fon} alt="Hero background" className="h-full w-full object-cover object-center opacity-70 filter brightness-80" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/40" />
         </div>
-        
+
         <div className="relative z-10 mx-auto max-w-5xl px-4 md:px-8 text-center space-y-6">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary border border-primary/20 animate-fade-in">
             <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
@@ -286,10 +283,9 @@ function Index() {
           </div>
         </div>
 
-        {/* ВИДЖЕТ "ЛИСТАЙТЕ ВНИЗ" */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5 object-bottom">
-          <a 
-            href="#catalog" 
+          <a
+            href="#catalog"
             className="flex flex-col items-center text-xs tracking-widest text-zinc-400 hover:text-primary uppercase transition-colors duration-300 group"
           >
             <span className="mb-1 font-medium scale-90 opacity-80 group-hover:opacity-100 transition-opacity">
@@ -307,7 +303,6 @@ function Index() {
           <p className="mx-auto max-w-2xl text-muted-foreground">Посмотрите реальные примеры автомобилей, которые мы выкупили в последнее время. Честные цены и сроки.</p>
         </div>
 
-        {/* Табы */}
         <div className="flex flex-wrap justify-center gap-2 border-b border-border pb-6">
           <button onClick={() => setActiveTab("all")} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === "all" ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-muted-foreground"}`}>Все авто</button>
           <button onClick={() => setActiveTab("excellent")} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === "excellent" ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-muted-foreground"}`}>Свежие (от 2017)</button>
@@ -315,11 +310,10 @@ function Index() {
           <button onClick={() => setActiveTab("commercial")} className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === "commercial" ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-muted-foreground"}`}>Коммерческие</button>
         </div>
 
-        {/* Сетка машин */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredCars.map((car, index) => (
             <div key={index} className="group overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:shadow-md">
-              <div 
+              <div
                 className="relative aspect-video overflow-hidden bg-secondary cursor-zoom-in"
                 onClick={() => setSelectedImage(car.img)}
               >
@@ -362,7 +356,6 @@ function Index() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {/* Шаг 1 */}
             <div className="group bg-card border border-border p-5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-sm">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -378,7 +371,6 @@ function Index() {
               </p>
             </div>
 
-            {/* Шаг 2 */}
             <div className="group bg-card border border-border p-5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-sm">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -394,7 +386,6 @@ function Index() {
               </p>
             </div>
 
-            {/* Шаг 3 */}
             <div className="group bg-card border border-border p-5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-sm">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -410,7 +401,6 @@ function Index() {
               </p>
             </div>
 
-            {/* Шаг 4 */}
             <div className="group bg-card border border-border p-5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-sm">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -429,11 +419,10 @@ function Index() {
         </div>
       </section>
 
-      {/* ФОТО */}
+      {/* Отзывы */}
       <section id="reviews" className="border-t border-border bg-background py-12 md:py-20">
         <div className="mx-auto max-w-7xl px-4 md:px-8 space-y-8 md:space-y-12">
           <div className="text-center space-y-3 md:space-y-4">
-            
             <h2 className="font-heading text-2xl md:text-4xl font-bold tracking-tight">Отзывы</h2>
             <p className="mx-auto max-w-2xl text-sm md:text-base text-muted-foreground">
               Реальные отзывы выкупленных автомобилей.
@@ -497,42 +486,40 @@ function Index() {
           <h2 className="font-heading text-3xl font-bold">Узнайте стоимость за 5 минут</h2>
           <p className="text-muted-foreground">Заполните форму, и наш оценщик свяжется с вами с готовым предложением.</p>
         </div>
-        <form 
-          className="bg-card border border-border p-6 md:p-8 rounded-2xl shadow-sm space-y-4 text-left" 
+        <form
+          className="bg-card border border-border p-6 md:p-8 rounded-2xl shadow-sm space-y-4 text-left"
           onSubmit={handleFormSubmit}
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <label className="text-sm font-medium">Марка и модель</label>
-              <Input 
-                placeholder="Например: Toyota Camry" 
-                required 
+              <Input
+                placeholder="Например: Toyota Camry"
+                required
                 value={carModel}
                 onChange={(e) => setCarModel(e.target.value)}
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Год выпуска</label>
-              <Input 
-                placeholder="Например: 2018" 
-                required 
+              <Input
+                placeholder="Например: 2018"
+                required
                 value={carYear}
                 onChange={(e) => setCarYear(e.target.value)}
               />
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium">Номер телефона</label>
-            <Input 
-              type="tel" 
-              placeholder="79990000000" 
+            <Input
+              type="tel"
+              placeholder="79990000000"
               value={phone}
-              required 
+              required
               onChange={(e) => {
-                // Оставляем только цифры
                 const onlyNums = e.target.value.replace(/\D/g, "");
-                // Ограничиваем длину строго в 11 символов
                 if (onlyNums.length <= 11) {
                   setPhone(onlyNums);
                 }
@@ -542,7 +529,7 @@ function Index() {
               Введено цифр: {phone.length} из 11
             </span>
           </div>
-          
+
           <Button type="submit" className="w-full h-12 text-base" disabled={isSending}>
             {isSending ? "Отправка..." : "Отправить заявку на оценку"}
           </Button>
@@ -576,26 +563,26 @@ function Index() {
 
       {/* Модальное окно просмотра изображений */}
       {selectedImage && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm cursor-zoom-out"
           onClick={() => setSelectedImage(null)}
         >
-          <button 
+          <button
             className="absolute top-4 right-4 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors text-sm font-medium"
             onClick={() => setSelectedImage(null)}
           >
             Закрыть ✕
           </button>
-          <img 
-            src={selectedImage} 
-            alt="Полноразмерное фото автомобиля" 
+          <img
+            src={selectedImage}
+            alt="Полноразмерное фото автомобиля"
             className="max-h-[90vh] max-w-full rounded-lg object-contain shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
         </div>
       )}
 
-      {/* ПЛАВАЮЩАЯ КНОПКА ЗВОНКА (СНИЗУ СПРАВА ПРИ СКРОЛЛЕ) */}
+      {/* Плавающая кнопка звонка */}
       <a
         href="tel:+79221882530"
         className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 bg-blue-600 hover:bg-blue-700 animate-pulse"
