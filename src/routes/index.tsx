@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router"; // Доб
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PhoneCall, Search, CircleDollarSign, FileText, Car, ChevronsDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import emailjs from "@emailjs/browser"; // 1. Импортируем EmailJS
 
 import fon from "@/assets/fon.jpg";
@@ -151,6 +151,7 @@ function Index() {
   const [carModel, setCarModel] = useState(""); // Добавлено состояние модели
   const [carYear, setCarYear] = useState("");   // Добавлено состояние года
   const [isSending, setIsSending] = useState(false); // Состояние лоадера
+  const isSubmittingRef = useRef(false); // Синхронный замок против двойной отправки (не зависит от рендера React)
   const [activeTab, setActiveTab] = useState<"all" | "excellent" | "budget" | "commercial">("all");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -169,11 +170,16 @@ function Index() {
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Синхронная проверка замка — блокирует повторные тапы ДО того,
+    // как React успеет перерисовать disabled-кнопку (важно на слабых мобильных)
+    if (isSubmittingRef.current) return;
+
     if (phone.replace(/\D/g, "").length !== 11) {
       alert("Номер телефона должен состоять ровно из 11 цифр!");
       return;
     }
 
+    isSubmittingRef.current = true;
     setIsSending(true);
 
     const templateParams = {
@@ -206,6 +212,7 @@ function Index() {
       )
       .finally(() => {
         setIsSending(false);
+        isSubmittingRef.current = false;
       });
   };
 
@@ -518,6 +525,7 @@ function Index() {
               placeholder="79990000000"
               value={phone}
               required
+              className="ym-record-keys"
               onChange={(e) => {
                 const onlyNums = e.target.value.replace(/\D/g, "");
                 if (onlyNums.length <= 11) {
@@ -560,6 +568,14 @@ function Index() {
           © {new Date().getFullYear()} ТрейдИнАвто. Все права защищены.
         </div>
       </footer>
+
+      {/* Оверлей отправки заявки: блокирует повторные тапы и даёт понятную обратную связь */}
+      {isSending && (
+        <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center gap-4 bg-background/90 backdrop-blur-sm">
+          <div className="h-12 w-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+          <p className="text-sm font-medium text-muted-foreground">Отправляем заявку, подождите...</p>
+        </div>
+      )}
 
       {/* Модальное окно просмотра изображений */}
       {selectedImage && (
