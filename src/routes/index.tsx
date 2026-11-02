@@ -249,7 +249,7 @@ function Index() {
               </svg>
             </a>
             <a
-              href="https://max.app/call/+79221882530"
+              href="https://max.ru/u/f9LHodD0cOLL-7IE1qE95Ne-3BNWPGjU67szT3O2AlDXTJdw8U2GoAMe_Ds"
               target="_blank"
               rel="noopener noreferrer"
               title="Макс"
